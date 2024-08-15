@@ -1,7 +1,22 @@
 import inquirer from 'inquirer';
-import EmployeeTracker from './queries';
+import { 
+    viewAllDepartments, 
+    addDepartment, 
+    deleteDepartment, 
+    viewAllRoles, 
+    addRole, 
+    deleteRole, 
+    viewAllEmployees, 
+    addEmployee, 
+    updateEmployeeRole, 
+    updateEmployeeManager, 
+    viewAllEmployeesByManager, 
+    viewEmployeesByDepartment, 
+    deleteEmployee, 
+    viewCombinedSalaries 
+} from './queries';
 
-async function mainMenu() {
+const mainMenu = async () => {
     const { choice } = await inquirer.prompt({
         name: 'choice',
         type: 'list',
@@ -25,4 +40,10 @@ async function mainMenu() {
         ]
     });
 
-  
+    switch (choice) {
+        case 'View All Departments':
+            const departments = await viewAllDepartments();
+            console.table(departments);
+            break;
+
+    }
