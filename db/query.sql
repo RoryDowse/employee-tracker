@@ -28,15 +28,18 @@ LEFT JOIN
 
 -- Add a department
 INSERT INTO department (name)
-VALUES ($1);
+VALUES ($1)
+RETURNING *;
 
 -- Add a role
 INSERT INTO role (title, salary, department_id)
-VALUES ($1, $2, $3);
+VALUES ($1, $2, $3)
+RETURNING *;
 
 -- Add an employee
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ($1, $2, $3, $4);
+VALUES ($1, $2, $3, $4)
+RETURNING *;
 
 -- Update an employee role
 UPDATE employee
