@@ -46,4 +46,15 @@ const mainMenu = async () => {
             console.table(departments);
             break;
 
+        case 'Add Department':
+            const { departmentName } = await inquirer.prompt({
+                type: 'input',
+                name: 'departmentName',
+                message: 'What is the name of the department?'
+            });
+            const newDepartment = await addDepartment(departmentName);
+            console.log('Department added: ', newDepartment);
+            break;
     }
+};
+    mainMenu();
