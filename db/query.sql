@@ -60,7 +60,7 @@ WHERE id = $2;
 -- View employees by manager
 SELECT employee.id, employee.first_name, employee.last_name
 FROM employee
-WHERE employee.manager_id = $1
+WHERE employee.manager_id = $1;
 
 -- View employees by department
 SELECT 
