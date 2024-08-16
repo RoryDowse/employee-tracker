@@ -99,6 +99,108 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                 yield (0, queries_1.deleteRole)(parseInt(deleteRoleId));
                 console.log('Role deleted');
                 break;
+            case 'View All Employees':
+                const employees = yield (0, queries_1.viewAllEmployees)();
+                console.table(employees);
+                break;
+            case 'Add Employee':
+                const { first_name, last_name, role_id, manager_id } = yield inquirer_1.default.prompt([
+                    {
+                        type: 'input',
+                        name: 'first_name',
+                        message: 'What is the employee\'s first name?'
+                    },
+                    {
+                        type: 'input',
+                        name: 'last_name',
+                        message: 'What is the employee\'s last name?'
+                    },
+                    {
+                        type: 'input',
+                        name: 'role_id',
+                        message: 'What is the employee\'s role ID?',
+                        validate: value => !isNaN(value) ? true : "Please enter a number"
+                    },
+                    {
+                        type: 'input',
+                        name: 'manager_id',
+                        message: 'What is the employee\'s manager ID? (leave blank if none)',
+                    }
+                ]);
+                const newEmployee = yield (0, queries_1.addEmployee)(first_name, last_name, parseInt(role_id), manager_id ? parseInt(manager_id) : null);
+                console.log('Employee added: ', newEmployee);
+                break;
+            case 'Update Employee Role':
+                const { updateEmpIdRole, newRoleId } = yield inquirer_1.default.prompt([
+                    {
+                        type: 'input',
+                        name: 'updateEmpIdRole',
+                        message: 'Enter the ID of the employee to update:'
+                    },
+                    {
+                        type: 'input',
+                        name: 'newRoleId',
+                        message: 'Enter the new role ID for the employee:',
+                        validate: value => !isNaN(value) ? true : 'Please enter a valid number'
+                    }
+                ]);
+                yield (0, queries_1.updateEmployeeRole)(parseInt(updateEmpIdRole), parseInt(newRoleId));
+                console.log('Employee role updated');
+                break;
+            case 'Update Employee Manager':
+                const { updateEmpIdManager, newManagerId } = yield inquirer_1.default.prompt([
+                    {
+                        type: 'input',
+                        name: 'updateEmpIdManager',
+                        message: 'Enter the ID of the employee to update:'
+                    },
+                    {
+                        type: 'input',
+                        name: 'newManagerId',
+                        message: 'Enter the new manager ID for the employee (or leave blank if none):',
+                    }
+                ]);
+                yield (0, queries_1.updateEmployeeManager)(parseInt(updateEmpIdManager), newManagerId ? parseInt(newManagerId) : null);
+                console.log('Employee manager updated');
+                break;
+            case 'View All Employees By Manager':
+                const { managerIdToView } = yield inquirer_1.default.prompt({
+                    type: 'input',
+                    name: 'managerIdToView',
+                    message: 'Enter the ID of the manager to view employees for:'
+                });
+                const employeesByManager = yield (0, queries_1.viewAllEmployeesByManager)(parseInt(managerIdToView));
+                console.table(employeesByManager);
+                break;
+            case 'View Employees By Department':
+                const { departmentNameToView } = yield inquirer_1.default.prompt({
+                    type: 'input',
+                    name: 'departmentNameToView',
+                    message: 'Enter the name of the department:'
+                });
+                const employeesByDepartment = yield (0, queries_1.viewEmployeesByDepartment)(departmentNameToView);
+                console.table(employeesByDepartment);
+                break;
+            case 'Delete Employee':
+                const { deleteEmpId } = yield inquirer_1.default.prompt({
+                    type: 'input',
+                    name: 'deleteEmpId',
+                    message: 'Enter the ID of the employee to delete:'
+                });
+                yield (0, queries_1.deleteEmployee)(parseInt(deleteEmpId));
+                console.log('Employee deleted');
+                break;
+            case 'View Combined Salaries':
+                const combinedSalaries = yield (0, queries_1.viewCombinedSalaries)();
+                console.table(combinedSalaries);
+                break;
+            case 'Exit':
+                console.log('Goodbye!');
+                process.exit();
+                break;
+            default:
+                console.log('Invalid option');
+                break;
         }
     }
 });
