@@ -2,9 +2,15 @@
 SELECT * FROM department;
 
 -- View all roles
-SELECT role.id, role.title, role.salary, department.name AS department
-FROM role
-JOIN department ON role.department_id = department.id;
+SELECT 
+    role.id AS "Role ID", 
+    role.title AS "Title", 
+    role.salary AS "Salary", 
+    department.name AS "Department"
+FROM 
+    role
+JOIN 
+    department ON role.department_id = department.id;
 
 
 -- View all employees

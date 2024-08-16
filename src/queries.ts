@@ -19,9 +19,15 @@ export const deleteDepartment = async (id: number) => {
 // Role Queries
 export const viewAllRoles = async () => {
     const result = await pool.query(`
-        SELECT role.id, role.title, role.salary, department.name AS department 
-        FROM role 
-        JOIN department ON role.department_id = department.id
+        SELECT 
+            role.id AS "Role ID", 
+            role.title AS "Title", 
+            role.salary AS "Salary", 
+            department.name AS "Department"
+        FROM 
+            role
+        JOIN 
+            department ON role.department_id = department.id;
         `);
     return result.rows;
 };
@@ -39,21 +45,21 @@ export const deleteRole = async (id: number) => {
 export const viewAllEmployees = async () => {
     const result = await pool.query(`
         SELECT 
-    employee.id AS "Employee ID",
-    employee.first_name AS "First Name",
-    employee.last_name AS "Last Name",
-    role.title AS "Title",
-    role.salary AS "Salary",
-    department.name AS "Department",
-    CONCAT(manager.first_name, ' ', manager.last_name) AS "Manager"
-FROM
-    employee
-JOIN 
-    role ON employee.role_id = role.id
-JOIN
-    department ON role.department_id = department.id
-LEFT JOIN
-    employee manager ON employee.manager_id = manager.id;
+            employee.id AS "Employee ID",
+            employee.first_name AS "First Name",
+            employee.last_name AS "Last Name",
+            role.title AS "Title",
+            role.salary AS "Salary",
+            department.name AS "Department",
+            CONCAT(manager.first_name, ' ', manager.last_name) AS "Manager"
+        FROM
+            employee
+        JOIN 
+            role ON employee.role_id = role.id
+        JOIN
+            department ON role.department_id = department.id
+        LEFT JOIN
+            employee manager ON employee.manager_id = manager.id;
 `);
     return result.rows;
 };
