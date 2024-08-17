@@ -68,6 +68,11 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                 console.table(roles);
                 break;
             case 'Add Role':
+                const departmentsForRole = yield (0, queries_1.viewAllDepartments)();
+                const departmentChoices = departmentsForRole.map(department => ({
+                    name: department.name,
+                    value: department.id
+                }));
                 const { title, salary, department_id } = yield inquirer_1.default.prompt([
                     {
                         type: 'input',
@@ -81,10 +86,10 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                         validate: value => !isNaN(value) ? true : 'Please enter a number'
                     },
                     {
-                        type: 'input',
+                        type: 'list',
                         name: 'department_id',
-                        message: 'What is the department ID of the role?',
-                        validate: value => !isNaN(value) ? true : 'Please enter a number'
+                        message: 'Which department does the role belong to?',
+                        choices: departmentChoices
                     }
                 ]);
                 const newRole = yield (0, queries_1.addRole)(title, parseFloat(salary), parseInt(department_id));
@@ -104,6 +109,11 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                 console.table(employees);
                 break;
             case 'Add Employee':
+                const rolesForEmployee = yield (0, queries_1.viewAllRoles)();
+                const roleChoices = rolesForEmployee.map(role => ({
+                    value: role["Role ID"],
+                    name: role["Title"]
+                }));
                 const { first_name, last_name, role_id, manager_id } = yield inquirer_1.default.prompt([
                     {
                         type: 'input',
@@ -116,10 +126,10 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                         message: 'What is the employee\'s last name?'
                     },
                     {
-                        type: 'input',
+                        type: 'list',
                         name: 'role_id',
-                        message: 'What is the employee\'s role ID?',
-                        validate: value => !isNaN(value) ? true : "Please enter a number"
+                        message: 'What is the employee\'s role?',
+                        choices: roleChoices
                     },
                     {
                         type: 'input',
@@ -131,20 +141,31 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                 console.log('Employee added: ', newEmployee);
                 break;
             case 'Update Employee Role':
-                const { updateEmpIdRole, newRoleId } = yield inquirer_1.default.prompt([
+                const employeesForUpdate = yield (0, queries_1.viewAllEmployees)();
+                const employeeRoleChoices = employeesForUpdate.map(employee => ({
+                    name: `${employee["First Name"]} ${employee["Last Name"]}`,
+                    value: employee["Employee ID"]
+                }));
+                const rolesForUpdate = yield (0, queries_1.viewAllRoles)();
+                const roleChoicesForUpdate = rolesForUpdate.map(role => ({
+                    name: role["Title"],
+                    value: role["Role ID"]
+                }));
+                const { updateEmpRole, newEmpRole } = yield inquirer_1.default.prompt([
                     {
-                        type: 'input',
-                        name: 'updateEmpIdRole',
-                        message: 'Enter the ID of the employee to update:'
+                        type: 'list',
+                        name: 'updateEmpRole',
+                        message: 'Which employee do you want to update?',
+                        choices: employeeRoleChoices
                     },
                     {
-                        type: 'input',
-                        name: 'newRoleId',
-                        message: 'Enter the new role ID for the employee:',
-                        validate: value => !isNaN(value) ? true : 'Please enter a valid number'
+                        type: 'list',
+                        name: 'newEmpRole',
+                        message: 'Which role do you want to assign to the selected employee?',
+                        choices: roleChoicesForUpdate
                     }
                 ]);
-                yield (0, queries_1.updateEmployeeRole)(parseInt(updateEmpIdRole), parseInt(newRoleId));
+                yield (0, queries_1.updateEmployeeRole)(parseInt(updateEmpRole), parseInt(newEmpRole));
                 console.log('Employee role updated');
                 break;
             case 'Update Employee Manager':
@@ -163,13 +184,13 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                 yield (0, queries_1.updateEmployeeManager)(parseInt(updateEmpIdManager), newManagerId ? parseInt(newManagerId) : null);
                 console.log('Employee manager updated');
                 break;
-            case 'View All Employees By Manager':
+            case 'View Employees By Manager':
                 const { managerIdToView } = yield inquirer_1.default.prompt({
                     type: 'input',
                     name: 'managerIdToView',
                     message: 'Enter the ID of the manager to view employees for:'
                 });
-                const employeesByManager = yield (0, queries_1.viewAllEmployeesByManager)(parseInt(managerIdToView));
+                const employeesByManager = yield (0, queries_1.viewEmployeesByManager)(parseInt(managerIdToView));
                 console.table(employeesByManager);
                 break;
             case 'View Employees By Department':

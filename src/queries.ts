@@ -79,7 +79,7 @@ export const updateEmployeeManager = async (id: number, manager_id: number | nul
     return result.rows[0];
 };
 
-export const viewAllEmployeesByManager = async (manager_id: number) => {
+export const viewEmployeesByManager = async (manager_id: number) => {
     const result = await pool.query(`SELECT employee.id, employee.first_name, employee.last_name FROM employee WHERE manager_id = $1`, [manager_id]);
     return result.rows;
 };

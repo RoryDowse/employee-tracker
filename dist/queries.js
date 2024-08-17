@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.viewCombinedSalaries = exports.deleteEmployee = exports.viewEmployeesByDepartment = exports.viewAllEmployeesByManager = exports.updateEmployeeManager = exports.updateEmployeeRole = exports.addEmployee = exports.viewAllEmployees = exports.deleteRole = exports.addRole = exports.viewAllRoles = exports.deleteDepartment = exports.addDepartment = exports.viewAllDepartments = void 0;
+exports.viewCombinedSalaries = exports.deleteEmployee = exports.viewEmployeesByDepartment = exports.viewEmployeesByManager = exports.updateEmployeeManager = exports.updateEmployeeRole = exports.addEmployee = exports.viewAllEmployees = exports.deleteRole = exports.addRole = exports.viewAllRoles = exports.deleteDepartment = exports.addDepartment = exports.viewAllDepartments = void 0;
 // queries.ts
 const connection_1 = require("./connection");
 // Department Queries
@@ -90,11 +90,11 @@ const updateEmployeeManager = (id, manager_id) => __awaiter(void 0, void 0, void
     return result.rows[0];
 });
 exports.updateEmployeeManager = updateEmployeeManager;
-const viewAllEmployeesByManager = (manager_id) => __awaiter(void 0, void 0, void 0, function* () {
+const viewEmployeesByManager = (manager_id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield connection_1.pool.query(`SELECT employee.id, employee.first_name, employee.last_name FROM employee WHERE manager_id = $1`, [manager_id]);
     return result.rows;
 });
-exports.viewAllEmployeesByManager = viewAllEmployeesByManager;
+exports.viewEmployeesByManager = viewEmployeesByManager;
 const viewEmployeesByDepartment = (department_name) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield connection_1.pool.query(`
         SELECT 

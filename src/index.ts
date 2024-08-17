@@ -10,7 +10,7 @@ import {
     addEmployee, 
     updateEmployeeRole, 
     updateEmployeeManager, 
-    viewAllEmployeesByManager, 
+    viewEmployeesByManager, 
     viewEmployeesByDepartment, 
     deleteEmployee, 
     viewCombinedSalaries 
@@ -75,6 +75,12 @@ const mainMenu = async () => {
             break;
         
         case 'Add Role':
+            const departmentsForRole = await viewAllDepartments();
+            const departmentChoices = departmentsForRole.map(department => ({
+                name: department.name,
+                value: department.id
+            }));
+
             const { title, salary, department_id } = await inquirer.prompt([
                 {
                     type: 'input',
@@ -88,10 +94,10 @@ const mainMenu = async () => {
                     validate: value => !isNaN(value) ? true : 'Please enter a number'
                 },
                 {
-                    type: 'input',
+                    type: 'list',
                     name: 'department_id',
-                    message: 'What is the department ID of the role?',
-                    validate: value => !isNaN(value) ? true : 'Please enter a number'
+                    message: 'Which department does the role belong to?',
+                    choices: departmentChoices
                 }
             ]);
             const newRole = await addRole(title, parseFloat(salary), parseInt(department_id));
@@ -114,6 +120,11 @@ const mainMenu = async () => {
             break;
 
         case 'Add Employee':
+            const rolesForEmployee = await viewAllRoles();
+            const roleChoices = rolesForEmployee.map(role => ({
+                value: role["Role ID"],
+                name: role["Title"]
+            }));
             const { first_name, last_name, role_id, manager_id } = await inquirer.prompt([
                 {
                     type: 'input',
@@ -126,10 +137,10 @@ const mainMenu = async () => {
                     message: 'What is the employee\'s last name?'
                 },
                 {
-                    type: 'input',
+                    type: 'list',
                     name: 'role_id',
-                    message: 'What is the employee\'s role ID?',
-                    validate: value => !isNaN(value) ? true : "Please enter a number"
+                    message: 'What is the employee\'s role?',
+                    choices: roleChoices
                 },
                 {
                     type: 'input',
@@ -147,20 +158,32 @@ const mainMenu = async () => {
             break;
 
             case 'Update Employee Role':
-                const { updateEmpIdRole, newRoleId  } = await inquirer.prompt([
+                const employeesForUpdate = await viewAllEmployees();
+                const employeeRoleChoices = employeesForUpdate.map(employee => ({
+                    name: `${employee["First Name"]} ${employee["Last Name"]}`,
+                    value: employee["Employee ID"]
+                }));
+
+                const rolesForUpdate = await viewAllRoles();
+                const roleChoicesForUpdate = rolesForUpdate.map(role => ({
+                    name: role["Title"],
+                    value: role["Role ID"]
+                }))
+                const { updateEmpRole, newEmpRole } = await inquirer.prompt([
                     {
-                        type: 'input',
-                        name: 'updateEmpIdRole',
-                        message: 'Enter the ID of the employee to update:'
+                        type: 'list',
+                        name: 'updateEmpRole',
+                        message: 'Which employee do you want to update?',
+                        choices: employeeRoleChoices
                     },
                     {
-                        type: 'input',
-                        name: 'newRoleId',
-                        message: 'Enter the new role ID for the employee:',
-                        validate: value => !isNaN(value) ? true : 'Please enter a valid number'
+                        type: 'list',
+                        name: 'newEmpRole',
+                        message: 'Which role do you want to assign to the selected employee?',
+                        choices: roleChoicesForUpdate
                     }
                 ]);
-                await updateEmployeeRole(parseInt(updateEmpIdRole), parseInt(newRoleId));
+                await updateEmployeeRole(parseInt(updateEmpRole), parseInt(newEmpRole));
                 console.log('Employee role updated');
                 break;
 
@@ -181,13 +204,13 @@ const mainMenu = async () => {
                 console.log('Employee manager updated');
                 break;
 
-                case 'View All Employees By Manager':
+                case 'View Employees By Manager':
                     const { managerIdToView } = await inquirer.prompt({
                         type: 'input',
                         name: 'managerIdToView',
                         message: 'Enter the ID of the manager to view employees for:'
                     });
-                const employeesByManager = await viewAllEmployeesByManager(parseInt(managerIdToView));
+                const employeesByManager = await viewEmployeesByManager(parseInt(managerIdToView));
                 console.table(employeesByManager);
                 break;
 
