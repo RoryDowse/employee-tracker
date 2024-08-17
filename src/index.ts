@@ -125,6 +125,11 @@ const mainMenu = async () => {
                 value: role["Role ID"],
                 name: role["Title"]
             }));
+            const employeesForManager = await viewAllEmployees();
+            const managerChoices = employeesForManager.filter(employee => employee.manager_id !== null).map(employee =>  ({
+                value: employee["Employee ID"],
+                name: `${employee["First Name"]} ${employee["Last Name"]}`
+            }));
             const { first_name, last_name, role_id, manager_id } = await inquirer.prompt([
                 {
                     type: 'input',
@@ -143,9 +148,13 @@ const mainMenu = async () => {
                     choices: roleChoices
                 },
                 {
-                    type: 'input',
+                    type: 'list',
                     name: 'manager_id',
-                    message: 'What is the employee\'s manager ID? (leave blank if none)',
+                    message: 'What is the name of the employee\'s manager?',
+                    choices: [
+                        { value: null, name: 'None' },
+                        ...managerChoices
+                    ]
                 }
             ]);
             const newEmployee = await addEmployee(

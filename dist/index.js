@@ -114,6 +114,11 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                     value: role["Role ID"],
                     name: role["Title"]
                 }));
+                const employeesForManager = yield (0, queries_1.viewAllEmployees)();
+                const managerChoices = employeesForManager.filter(employee => employee.manager_id !== null).map(employee => ({
+                    value: employee["Employee ID"],
+                    name: `${employee["First Name"]} ${employee["Last Name"]}`
+                }));
                 const { first_name, last_name, role_id, manager_id } = yield inquirer_1.default.prompt([
                     {
                         type: 'input',
@@ -132,9 +137,13 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                         choices: roleChoices
                     },
                     {
-                        type: 'input',
+                        type: 'list',
                         name: 'manager_id',
-                        message: 'What is the employee\'s manager ID? (leave blank if none)',
+                        message: 'What is the name of the employee\'s manager?',
+                        choices: [
+                            { value: null, name: 'None' },
+                            ...managerChoices
+                        ]
                     }
                 ]);
                 const newEmployee = yield (0, queries_1.addEmployee)(first_name, last_name, parseInt(role_id), manager_id ? parseInt(manager_id) : null);
