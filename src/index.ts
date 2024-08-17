@@ -35,7 +35,7 @@ const mainMenu = async () => {
             'Add Employee',
             'Update Employee Role',
             'Update Employee Manager',
-            'View All Employees By Manager',
+            'View Employees By Manager',
             'View Employees By Department',
             'Delete Employee',
             'View Combined Salaries',

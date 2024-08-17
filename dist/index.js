@@ -33,7 +33,7 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
                 'Add Employee',
                 'Update Employee Role',
                 'Update Employee Manager',
-                'View All Employees By Manager',
+                'View Employees By Manager',
                 'View Employees By Department',
                 'Delete Employee',
                 'View Combined Salaries',

@@ -3,7 +3,13 @@ import { pool } from './connection';
 
 // Department Queries
 export const viewAllDepartments = async () => {
-    const result = await pool.query('SELECT * FROM department');
+    const result = await pool.query(`
+        SELECT 
+            id AS "ID",
+            name AS "Name" 
+        FROM 
+            department
+        `);
     return result.rows;
 };
 
