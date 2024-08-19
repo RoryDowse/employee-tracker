@@ -10,6 +10,8 @@ This project is designed to help business owners and managers efficiently view a
 
 Watch the video below for a quick overview and demo of the project:
 
+https://drive.google.com/file/d/1VY9Po9H4JHbiBqo2l9NSJ67scy9An9Kh/view?usp=drive_link
+
 ## Description
 
 The Employee Tracker project provides a Content Management System (CMS) that enables non-developers to easily view and interact with employee information stored in a database. It categorizes employee data by department, role, and individual employee, making it easier to manage and organize workforce information.
