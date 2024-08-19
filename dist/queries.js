@@ -39,7 +39,7 @@ const viewAllRoles = () => __awaiter(void 0, void 0, void 0, function* () {
         SELECT 
             role.id AS "Role ID", 
             role.title AS "Title", 
-            role.salary AS Salary, 
+            role.salary AS "Salary", 
             department.name AS "Department"
         FROM 
             role
@@ -66,7 +66,7 @@ const viewAllEmployees = () => __awaiter(void 0, void 0, void 0, function* () {
             employee.first_name AS "First Name",
             employee.last_name AS "Last Name",
             role.title AS "Title",
-            role.salary AS Salary,
+            role.salary AS "Salary",
             department.name AS "Department",
             CONCAT(manager.first_name, ' ', manager.last_name) AS "Manager"
         FROM
@@ -108,7 +108,7 @@ const viewEmployeesByDepartment = (department_name) => __awaiter(void 0, void 0,
             employee.first_name AS "First Name",
             employee.last_name AS "Last Name",
             role.title AS "Title",
-            role.salary AS Salary,
+            role.salary AS "Salary",
             department.name AS "Department",
             CONCAT(manager.first_name, ' ', manager.last_name) AS "Manager"
         FROM

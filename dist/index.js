@@ -70,8 +70,8 @@ const mainMenu = () => __awaiter(void 0, void 0, void 0, function* () {
             case 'Add Role':
                 const departmentsForRole = yield (0, queries_1.viewAllDepartments)();
                 const departmentChoices = departmentsForRole.map(department => ({
-                    name: department.name,
-                    value: department.id
+                    name: department["Name"],
+                    value: department["ID"]
                 }));
                 const { title, salary, department_id } = yield inquirer_1.default.prompt([
                     {

@@ -16,10 +16,13 @@ import {
     viewCombinedSalaries 
 } from './queries';
 
+// Main function to display the menu and handle user input
 const mainMenu = async () => {
     let exit = false;
-    // returns main menu until user exits
+
+    // Loop to keep displaying the menu until the user exits
     while (!exit) {
+    // Prompt the user for their choice
     const { choice } = await inquirer.prompt({
         name: 'choice',
         type: 'list',
@@ -43,12 +46,15 @@ const mainMenu = async () => {
         ]
     });
 
+    // Handle each menu choice with appropriate actions
     switch (choice) {
+        // View all departments
         case 'View All Departments':
             const departments = await viewAllDepartments();
             console.table(departments);
             break;
 
+        // Add a department
         case 'Add Department':
             const { departmentName } = await inquirer.prompt({
                 type: 'input',
@@ -59,6 +65,7 @@ const mainMenu = async () => {
             console.log('Department added: ', newDepartment);
             break;
         
+        // Delete a department
         case 'Delete Department':
             const { id } = await inquirer.prompt({
                 type: 'input',
@@ -69,16 +76,18 @@ const mainMenu = async () => {
             console.log('Department deleted');
             break;
 
+        // View all roles
         case 'View All Roles':
             const roles = await viewAllRoles();
             console.table(roles);
             break;
         
+        // Add a role
         case 'Add Role':
             const departmentsForRole = await viewAllDepartments();
             const departmentChoices = departmentsForRole.map(department => ({
-                name: department.name,
-                value: department.id
+                name: department["Name"],
+                value: department["ID"]
             }));
 
             const { title, salary, department_id } = await inquirer.prompt([
@@ -104,6 +113,7 @@ const mainMenu = async () => {
             console.log('Role added: ', newRole);
             break;
         
+        // Delete a role
         case 'Delete Role':
             const { deleteRoleId } = await inquirer.prompt({
                 type: 'input',
@@ -114,11 +124,13 @@ const mainMenu = async () => {
             console.log('Role deleted');
             break;
 
+        // View all employees
         case 'View All Employees':
             const employees = await viewAllEmployees();
             console.table(employees);
             break;
 
+        // Add an employee
         case 'Add Employee':
             const rolesForEmployee = await viewAllRoles();
             const roleChoices = rolesForEmployee.map(role => ({
@@ -166,98 +178,107 @@ const mainMenu = async () => {
             console.log('Employee added: ', newEmployee);
             break;
 
-            case 'Update Employee Role':
-                const employeesForUpdate = await viewAllEmployees();
-                const employeeRoleChoices = employeesForUpdate.map(employee => ({
-                    name: `${employee["First Name"]} ${employee["Last Name"]}`,
-                    value: employee["Employee ID"]
-                }));
+        // Update an employee's role
+        case 'Update Employee Role':
+            const employeesForUpdate = await viewAllEmployees();
+            const employeeRoleChoices = employeesForUpdate.map(employee => ({
+                name: `${employee["First Name"]} ${employee["Last Name"]}`,
+                value: employee["Employee ID"]
+            }));
 
-                const rolesForUpdate = await viewAllRoles();
-                const roleChoicesForUpdate = rolesForUpdate.map(role => ({
-                    name: role["Title"],
-                    value: role["Role ID"]
-                }))
-                const { updateEmpRole, newEmpRole } = await inquirer.prompt([
-                    {
-                        type: 'list',
-                        name: 'updateEmpRole',
-                        message: 'Which employee do you want to update?',
-                        choices: employeeRoleChoices
-                    },
-                    {
-                        type: 'list',
-                        name: 'newEmpRole',
-                        message: 'Which role do you want to assign to the selected employee?',
-                        choices: roleChoicesForUpdate
-                    }
-                ]);
-                await updateEmployeeRole(parseInt(updateEmpRole), parseInt(newEmpRole));
-                console.log('Employee role updated');
-                break;
+            const rolesForUpdate = await viewAllRoles();
+            const roleChoicesForUpdate = rolesForUpdate.map(role => ({
+                name: role["Title"],
+                value: role["Role ID"]
+            }))
+            const { updateEmpRole, newEmpRole } = await inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'updateEmpRole',
+                    message: 'Which employee do you want to update?',
+                    choices: employeeRoleChoices
+                },
+                {
+                    type: 'list',
+                    name: 'newEmpRole',
+                    message: 'Which role do you want to assign to the selected employee?',
+                    choices: roleChoicesForUpdate
+                }
+            ]);
+            await updateEmployeeRole(parseInt(updateEmpRole), parseInt(newEmpRole));
+            console.log('Employee role updated');
+            break;
 
-            case 'Update Employee Manager':
-                const { updateEmpIdManager, newManagerId } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'updateEmpIdManager',
-                        message: 'Enter the ID of the employee to update:'
-                    },
-                    {
-                        type: 'input',
-                        name: 'newManagerId',
-                        message: 'Enter the new manager ID for the employee (or leave blank if none):',
-                    }
-                ]);
-                await updateEmployeeManager(parseInt(updateEmpIdManager), newManagerId ? parseInt(newManagerId) : null);
-                console.log('Employee manager updated');
-                break;
+        // Update an employee's manager
+        case 'Update Employee Manager':
+            const { updateEmpIdManager, newManagerId } = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'updateEmpIdManager',
+                    message: 'Enter the ID of the employee to update:'
+                },
+                {
+                    type: 'input',
+                    name: 'newManagerId',
+                    message: 'Enter the new manager ID for the employee (or leave blank if none):',
+                }
+            ]);
+            await updateEmployeeManager(parseInt(updateEmpIdManager), newManagerId ? parseInt(newManagerId) : null);
+            console.log('Employee manager updated');
+            break;
 
-                case 'View Employees By Manager':
-                    const { managerIdToView } = await inquirer.prompt({
-                        type: 'input',
-                        name: 'managerIdToView',
-                        message: 'Enter the ID of the manager to view employees for:'
-                    });
-                const employeesByManager = await viewEmployeesByManager(parseInt(managerIdToView));
-                console.table(employeesByManager);
-                break;
+        // View employees by manager
+        case 'View Employees By Manager':
+            const { managerIdToView } = await inquirer.prompt({
+                type: 'input',
+                name: 'managerIdToView',
+                message: 'Enter the ID of the manager to view employees for:'
+            });
+            const employeesByManager = await viewEmployeesByManager(parseInt(managerIdToView));
+            console.table(employeesByManager);
+            break;
 
-                case 'View Employees By Department':
-                    const { departmentNameToView } = await inquirer.prompt({
-                        type: 'input',
-                        name: 'departmentNameToView',
-                        message: 'Enter the name of the department:'
-                    });
-                const employeesByDepartment = await viewEmployeesByDepartment(departmentNameToView);
-                console.table(employeesByDepartment);
-                break;
+        // View employees by department
+        case 'View Employees By Department':
+            const { departmentNameToView } = await inquirer.prompt({
+                type: 'input',
+                name: 'departmentNameToView',
+                message: 'Enter the name of the department:'
+            });
+            const employeesByDepartment = await viewEmployeesByDepartment(departmentNameToView);
+            console.table(employeesByDepartment);
+            break;
 
-                case 'Delete Employee':
-                    const { deleteEmpId } = await inquirer.prompt({
-                        type: 'input',
-                        name: 'deleteEmpId',
-                        message: 'Enter the ID of the employee to delete:'
-                    });
-                await deleteEmployee(parseInt(deleteEmpId));
-                console.log('Employee deleted');
-                break;
+        // Delete an employee
+        case 'Delete Employee':
+            const { deleteEmpId } = await inquirer.prompt({
+                type: 'input',
+                name: 'deleteEmpId',
+                message: 'Enter the ID of the employee to delete:'
+            });
+            await deleteEmployee(parseInt(deleteEmpId));
+            console.log('Employee deleted');
+            break;
 
-            case 'View Combined Salaries':
-                const combinedSalaries = await viewCombinedSalaries();
-                console.table(combinedSalaries);
-                break;
+        // View combined salaries
+        case 'View Combined Salaries':
+            const combinedSalaries = await viewCombinedSalaries();
+            console.table(combinedSalaries);
+            break;
 
-            case 'Exit':
-                console.log('Goodbye!');
-                process.exit();
-                break;
+        // Exit the program
+        case 'Exit':
+            console.log('Goodbye!');
+            process.exit();
+            break;
 
-            default:
-                console.log('Invalid option');
-                break;
+        // Handle invalid option
+        default:
+            console.log('Invalid option');
+            break;
         }      
     }
 };
 
+// Execute the main menu function
 mainMenu();
