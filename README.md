@@ -51,7 +51,7 @@ Throughout this project, I gained experience in creating schemas, seeds, and que
    - View the total budget
 4. Exit the application.
 
-![Menu](assets/images/menu.png)
+![Menu](assets/menu.png)
 
 ## License
 
